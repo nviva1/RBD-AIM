@@ -74,7 +74,7 @@ subsets, is specified in [`docs/DATA.md`](docs/DATA.md).
 
 ### Weights
 
-Twenty checkpoints are hosted at
+Twenty checkpoints are published at
 [huggingface.co/nviva1/rbd-aim-epitope](https://huggingface.co/nviva1/rbd-aim-epitope).
 They are retrieved automatically by `rbdaim score --from-hub`, or may be
 obtained directly:
