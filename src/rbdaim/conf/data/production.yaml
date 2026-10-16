@@ -1,0 +1,13 @@
+# The labeled Fab dataset.
+#
+# No default path: this dataset is not redistributable with the code, and a
+# default that only resolves on one machine is worse than an error. Pass it
+# explicitly, or set RBDAIM_DATA and use `data.path=${oc.env:RBDAIM_DATA}`.
+# See "Getting the data" in the README.
+path: ???
+max_length: 150          # AntiBERTy tokenizer max sequence length
+# Column names form the validated data contract (see rbdaim/schema.py).
+label_column: POS_class
+split_prefix: cross_val_test
+holdout_column: our_test
+num_folds: 10

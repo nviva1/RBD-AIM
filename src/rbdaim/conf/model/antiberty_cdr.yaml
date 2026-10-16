@@ -1,0 +1,3 @@
+# Mean pooling over CDR-residue embeddings of each chain.
+pooling: cdr
+dropout: 0.0

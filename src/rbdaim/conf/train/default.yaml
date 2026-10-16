@@ -1,0 +1,21 @@
+# Defaults match the original research code. Not tuned.
+epochs: 4
+lr: 2.0e-5
+batch_size: 1
+max_grad_norm: null     # null => no clipping
+weight_decay: 0.0
+warmup_ratio: 0.0       # 0 => constant LR, no schedule
+class_weighting: false
+device: auto             # auto -> cuda, else mps, else cpu
+folds: null              # null => all folds in data.num_folds
+full_model: false        # true => train on all non-holdout rows, no validation
+ensemble_id: 0
+checkpoint_dir: weights
+num_workers: 0
+resume: false
+
+# --- Deviations from the original. All off by default. ---
+patience: null              # int => early-stop on held-out F1, keep best epoch
+min_delta: 0.0
+exclude_unlabeled: false    # drop rows with no epitope label from training
+exclude_holdout_from_cv: false

@@ -1,0 +1,19 @@
+# Conda environment for the full feature set.
+#
+# Why conda at all: `rbdaim predict` on raw sequences numbers them with ANARCI,
+# which is a Python wrapper around `hmmscan` from HMMER. HMMER is a C program,
+# so pip cannot install it; `pip install anarci` alone leaves you with a wrapper
+# that dies on FileNotFoundError: 'hmmscan'. Conda brings both.
+#
+# Training and scoring need neither — the dataset ships pre-numbered sequences.
+name: rbdaim
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.12
+  - anarci
+  - hmmer
+  - pip
+  - pip:
+      - -e .[dev]

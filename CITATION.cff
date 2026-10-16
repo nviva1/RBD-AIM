@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the software and the paper."
+title: "RBD-AIM classifier"
+abstract: >-
+  Paired-chain AntiBERTy classifier assigning antibodies to one of 12 SARS-CoV-2
+  RBD epitope classes; the NN-model component of RBD-AIM.
+type: software
+authors:
+  - family-names: Ivanisenko
+    given-names: Nikita V.
+license: Apache-2.0
+repository-code: "https://github.com/nviva1/RBD-AIM"
+version: "1.0.0"
+preferred-citation:
+  type: article
+  title: "Mining antibody functionality via AI-guided structural landscape profiling"
+  authors:
+    - family-names: Terekhov
+      given-names: Stanislav S.
+    - family-names: Ivanisenko
+      given-names: Nikita V.
+  journal: "Nature Communications"
+  year: 2026
+  doi: "10.1038/s41467-026-70553-6"

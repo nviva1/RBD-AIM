@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: lint + types (3.12)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.9.9"
+          enable-cache: true
+      - run: uv sync --locked --extra dev
+      - name: ruff check
+        run: uv run ruff check .
+      - name: ruff format
+        run: uv run ruff format --check .
+      - name: mypy --strict
+        run: uv run mypy
+
+  test:
+    name: tests (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.9.9"
+          enable-cache: true
+          python-version: ${{ matrix.python-version }}
+      - run: uv sync --locked --extra dev
+      - name: Confirm the interpreter under test
+        # `uv python install` alone does not change which interpreter uv uses;
+        # assert the version rather than trusting the matrix label.
+        run: |
+          uv run python -c "import sys; v=sys.version_info; \
+            assert f'{v.major}.{v.minor}' == '${{ matrix.python-version }}', sys.version"
+      - name: pytest
+        # `slow` tests need real AntiBERTy weights and the unreleased dataset,
+        # neither of which a runner has. Everything else must pass here.
+        run: uv run pytest -m "not slow"
+
+
+  build:
+    name: package builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.9.9"
+      - name: Build sdist + wheel
+        run: uv build
+      - name: Wheel ships its configs
+        # A wheel without conf/ installs a CLI that cannot compose its defaults.
+        run: |
+          for f in rbdaim/conf/config.yaml \
+                   rbdaim/conf/data/production.yaml \
+                   rbdaim/conf/model/antiberty_cls.yaml \
+                   rbdaim/conf/train/default.yaml; do
+            uv run python -m zipfile -l dist/*.whl | grep -q "$f" \
+              || { echo "wheel is missing $f"; exit 1; }
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: distributions
+          path: dist/

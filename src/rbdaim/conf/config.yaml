@@ -1,0 +1,11 @@
+# Root Hydra config. Compose with groups; override on the CLI, e.g.
+#   rbdaim train model=antiberty_cdr train.epochs=4
+defaults:
+  - data: production
+  - model: antiberty_cls
+  - train: default
+  - _self_
+
+seed: 42
+# Where lineage.json and train_metrics.json are written.
+output_dir: outputs
